@@ -87,12 +87,24 @@ export default function EmailEditor(props: Props) {
         contextmenu: false,
         language: "zh_CN",
         language_url: "/zh_CN.js",
-        file_picker_callback: (callback, _, meta) => {
-          if (meta.filetype === "image") {
-            callback("https://www.google.com/logos/google.jpg", {
-              alt: "My alt text",
-            });
-          }
+        file_picker_types: "image",
+        file_picker_callback: (cb) => {
+          const input = document.createElement("input");
+          input.setAttribute("type", "file");
+          input.setAttribute("accept", "image/*");
+
+          input.addEventListener("change", (e) => {
+            const file = (e.target as HTMLInputElement).files?.[0];
+
+            if (file) {
+              const fakeUploadedUrl =
+                "https://101.226.30.13/static/img/logo_white.png";
+              const url = fakeUploadedUrl + "#inline=1";
+              cb(url, { title: file.name });
+            }
+          });
+
+          input.click();
         },
       }}
     />

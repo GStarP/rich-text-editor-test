@@ -1,5 +1,11 @@
 #root {
   .tox {
+    .tox-tbtn {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
     .tox-toolbar__group {
       position: relative;
 
