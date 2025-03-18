@@ -11,46 +11,46 @@ import "tinymce/icons/default";
 // Editor styles
 import "tinymce/skins/ui/oxide/skin";
 
-// importing the plugin js.
-// if you use a plugin that is not listed here the editor will fail to load
+/* importing the plugin js. */
+/* if you use a plugin that is not listed here the editor will fail to load */
 import "tinymce/plugins/advlist";
-import "tinymce/plugins/anchor";
-import "tinymce/plugins/autolink";
-import "tinymce/plugins/autoresize";
-import "tinymce/plugins/autosave";
-import "tinymce/plugins/charmap";
-import "tinymce/plugins/code";
-import "tinymce/plugins/codesample";
-import "tinymce/plugins/directionality";
-import "tinymce/plugins/emoticons";
-import "tinymce/plugins/fullscreen";
-import "tinymce/plugins/help";
-import "tinymce/plugins/help/js/i18n/keynav/en";
+// import "tinymce/plugins/anchor";
+// import "tinymce/plugins/autolink";
+// import "tinymce/plugins/autoresize";
+// import "tinymce/plugins/autosave";
+// import "tinymce/plugins/charmap";
+// import "tinymce/plugins/code";
+// import "tinymce/plugins/codesample";
+// import "tinymce/plugins/directionality";
+// import "tinymce/plugins/emoticons";
+// import "tinymce/plugins/fullscreen";
+// import "tinymce/plugins/help";
+// import "tinymce/plugins/help/js/i18n/keynav/en";
 import "tinymce/plugins/image";
-import "tinymce/plugins/importcss";
-import "tinymce/plugins/insertdatetime";
+// import "tinymce/plugins/importcss";
+// import "tinymce/plugins/insertdatetime";
 import "tinymce/plugins/link";
 import "tinymce/plugins/lists";
-import "tinymce/plugins/media";
-import "tinymce/plugins/nonbreaking";
-import "tinymce/plugins/pagebreak";
+// import "tinymce/plugins/media";
+// import "tinymce/plugins/nonbreaking";
+// import "tinymce/plugins/pagebreak";
 import "tinymce/plugins/preview";
-import "tinymce/plugins/quickbars";
-import "tinymce/plugins/save";
+// import "tinymce/plugins/quickbars";
+// import "tinymce/plugins/save";
 import "tinymce/plugins/searchreplace";
 import "tinymce/plugins/table";
-import "tinymce/plugins/visualblocks";
-import "tinymce/plugins/visualchars";
-import "tinymce/plugins/wordcount";
+// import "tinymce/plugins/visualblocks";
+// import "tinymce/plugins/visualchars";
+// import "tinymce/plugins/wordcount";
 
-// importing plugin resources
-import "tinymce/plugins/emoticons/js/emojis";
-
-// Content styles, including inline UI like fake cursors
+/* Content styles, including inline UI like fake cursors */
 import "tinymce/skins/content/default/content";
 import "tinymce/skins/ui/oxide/content";
 
-// custom css
+/* importing plugin resources */
+// import "tinymce/plugins/emoticons/js/emojis";
+
+/* custom css */
 import "./email-editor.scss";
 
 type EditorAPI = Parameters<
@@ -58,35 +58,44 @@ type EditorAPI = Parameters<
 >[1];
 
 type Props = {
-  editor: {
+  editorRef: {
     current: EditorAPI | null;
   };
 };
 
-export default function EmailEditor(props: Props) {
+export default function EmailEditor({ editorRef }: Props) {
   return (
     <Editor
       licenseKey="gpl"
-      onInit={(_, editor) => (props.editor.current = editor)}
+      onInit={(_, editor) => (editorRef.current = editor)}
       init={{
         height: 480,
         menubar: false,
         statusbar: false,
-        plugins: ["preview", "image", "link", "lists", "advlist", "table"],
+        plugins: [
+          "preview",
+          "image",
+          "link",
+          "lists",
+          "advlist",
+          "table",
+          "searchreplace",
+        ],
         toolbar:
           "undo redo removeformat | " +
           "fontfamily fontsize | " +
           "bold italic underline strikethrough | " +
           "forecolor backcolor | " +
-          "align bullist numlist outdent indent lineheight | " +
+          "align bullist numlist indent outdent lineheight | " +
           "image table | " +
-          "emoticons code link | " +
-          "preview",
+          "hr link | " +
+          "searchreplace preview",
         content_style: "body { font-family:Arial,sans-serif; font-size:14px; }",
         toolbar_mode: "sliding",
         contextmenu: false,
         language: "zh_CN",
         language_url: "/zh_CN.js",
+        // image upload
         file_picker_types: "image",
         file_picker_callback: (cb) => {
           const input = document.createElement("input");
@@ -100,12 +109,17 @@ export default function EmailEditor(props: Props) {
               const fakeUploadedUrl =
                 "https://101.226.30.13/static/img/logo_white.png";
               const url = fakeUploadedUrl + "#inline=1";
-              cb(url, { title: file.name });
+              cb(url, {
+                alt: file.name,
+              });
             }
           });
 
           input.click();
         },
+        // link
+        link_default_target: "_blank",
+        link_assume_external_targets: "https",
       }}
     />
   );
